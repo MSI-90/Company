@@ -1,11 +1,17 @@
 using CompanyEmployee.Extensions.ServiceExtensons;
+using Contracts;
+using LoggerService;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Logging.Abstractions;
+using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+
 builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
-
+builder.Services.ConfigureLoggerService();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -17,6 +23,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     //app.UseSwagger();
     //app.UseSwaggerUI();
 }

@@ -1,4 +1,7 @@
-﻿namespace CompanyEmployee.Extensions.ServiceExtensons
+﻿using Contracts;
+using LoggerService;
+
+namespace CompanyEmployee.Extensions.ServiceExtensons
 {
     public static class ServiceExtensions
     {
@@ -13,5 +16,7 @@
         {
 
         });
+
+        public static void ConfigureLoggerService(this IServiceCollection services) => services.AddSingleton<ILoggerManager, LoggerManager>();
     }
 }
