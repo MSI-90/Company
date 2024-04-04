@@ -9,7 +9,6 @@ namespace Repository
         public DbSet<Employee>? Employees { get; set; }
         public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options)
         {
-
         }
     }
 }
