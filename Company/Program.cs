@@ -1,8 +1,5 @@
 using CompanyEmployee.Extensions.ServiceExtensons;
-using Contracts;
-using LoggerService;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Logging.Abstractions;
 using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,12 +10,14 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureLoggerService();
 
+builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(Company.Presentation.AssemblyReference).Assembly);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 //builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -26,8 +25,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    //app.UseSwagger();
-    //app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 else
     app.UseHsts();
@@ -43,7 +42,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 app.UseCors("CorsPolicy");
 
-app.UseRouting();
+//app.UseRouting();
 
 app.UseAuthorization();
 
