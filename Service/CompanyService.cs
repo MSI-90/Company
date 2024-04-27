@@ -1,6 +1,8 @@
-﻿using Contracts;
-using Entities.Models;
+﻿using AutoMapper;
+using Contracts;
+using Entities.Exceptions;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 
 namespace Service
 {
@@ -8,24 +10,31 @@ namespace Service
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _loggerManager;
-        public CompanyService(IRepositoryManager repositoryManager, ILoggerManager loggerManager)
+        private readonly IMapper _mapper;
+        public CompanyService(IRepositoryManager repositoryManager, ILoggerManager loggerManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _loggerManager = loggerManager;
+            _mapper = mapper;
         }
 
-        public IEnumerable<Company> GetAllCompanies(bool trackChanges)
+        public IEnumerable<CompanyDto> GetAllCompanies(bool trackChanges)
         {
-            try
-            {
-                var companies = _repositoryManager.Company.GetAllCompanies(trackChanges);
-                return companies;
-            }
-            catch (Exception ex)
-            {
-                _loggerManager.LogError($"Что-то пошло не так в {nameof(GetAllCompanies)} методе сервиса {ex}");
-                throw;
-            }
+            var companies = _repositoryManager.Company.GetAllCompanies(trackChanges);
+
+            var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+
+            return companiesDto;
+        }
+
+        public CompanyDto GetCompany(Guid id, bool trackChanges)
+        {
+            var company = _repositoryManager.Company.GetCompany(id, trackChanges);
+            if (company is null)
+                throw new CompanyNotFoundException(id);
+
+            var companyDto = _mapper.Map<CompanyDto>(company);
+            return companyDto;
         }
     }
 }

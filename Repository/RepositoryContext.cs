@@ -6,7 +6,7 @@ namespace Repository
 {
     public class RepositoryContext : DbContext
     {
-        public DbSet<Company>? Companies { get; set; }
+        public DbSet<Compani>? Companies { get; set; }
         public DbSet<Employee>? Employees { get; set; }
         public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options)
         {

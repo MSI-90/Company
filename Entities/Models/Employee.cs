@@ -20,8 +20,8 @@ namespace Entities.Models
         public string? Position { get; set; }
 
 
-        [ForeignKey(nameof(Company))]
+        //[ForeignKey(nameof(Company))]
         public Guid CompanyId { get; set; }
-        public Company? Company { get; set; }
+        public Compani? Company { get; set; }
     }
 }
