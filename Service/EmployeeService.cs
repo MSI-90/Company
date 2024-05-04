@@ -18,6 +18,20 @@ namespace Service
             _mapper = mapper;
         }
 
+        public EmployeeDto GetEmployee(Guid companyId, Guid id, bool trackChanges)
+        {
+            var company = _repositoryManager.Company.GetCompany(companyId, trackChanges);
+            if (company is null)
+                throw new EmployeeNotFoundException(companyId);
+
+            var employeeDb = _repositoryManager.Employee.GetEmployee(companyId, id, trackChanges);
+            if (employeeDb is null) 
+                throw new EmployeeNotFoundException(companyId);
+
+            var employee = _mapper.Map<EmployeeDto>(employeeDb);
+            return employee;
+        }
+
         public IEnumerable<EmployeeDto> GetEmployees(Guid companyId, bool trackChanges)
         {
             var company = _repositoryManager.Company.GetCompany(companyId, trackChanges);

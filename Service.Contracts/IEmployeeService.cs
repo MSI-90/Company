@@ -1,14 +1,9 @@
 ﻿using Shared.DataTransferObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Service.Contracts
+namespace Service.Contracts;
+
+public interface IEmployeeService
 {
-    public interface IEmployeeService
-    {
-        IEnumerable<EmployeeDto> GetEmployees(Guid companyId, bool trackChanges);
-    }
+    IEnumerable<EmployeeDto> GetEmployees(Guid companyId, bool trackChanges);
+    EmployeeDto GetEmployee(Guid companyId, Guid id, bool trackChanges);
 }

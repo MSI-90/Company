@@ -5,9 +5,12 @@ namespace Repository
 {
     public class CompanyRepository : RepositoryBase<Compani>, ICompanyRepository
     {
+
         public CompanyRepository(RepositoryContext repositoryContext) : base(repositoryContext)
         {
         }
+
+        public void CreateCompany(Compani company) => Create(company);
 
         public IEnumerable<Compani> GetAllCompanies(bool trackChanges) =>
             FindAll(trackChanges)

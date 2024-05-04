@@ -12,8 +12,8 @@ using Repository;
 namespace Company.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240427004945_newInit")]
-    partial class newInit
+    [Migration("20240429140243_initDataBase")]
+    partial class initDataBase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
