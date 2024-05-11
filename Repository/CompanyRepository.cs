@@ -1,23 +1,25 @@
 ﻿using Contracts;
 using Entities.Models;
 
-namespace Repository
+namespace Repository;
+
+public class CompanyRepository : RepositoryBase<Compani>, ICompanyRepository
 {
-    public class CompanyRepository : RepositoryBase<Compani>, ICompanyRepository
+
+    public CompanyRepository(RepositoryContext repositoryContext) : base(repositoryContext)
     {
-
-        public CompanyRepository(RepositoryContext repositoryContext) : base(repositoryContext)
-        {
-        }
-
-        public void CreateCompany(Compani company) => Create(company);
-
-        public IEnumerable<Compani> GetAllCompanies(bool trackChanges) =>
-            FindAll(trackChanges)
-                .OrderBy(c => c.Name)
-                .ToList();
-
-        public Compani GetCompany(Guid companyId, bool trackChanges) => FindByConditoin(c => c.Id.Equals(companyId), trackChanges)
-            .SingleOrDefault();
     }
+
+    public void CreateCompany(Compani company) => Create(company);
+
+    public IEnumerable<Compani> GetAllCompanies(bool trackChanges) =>
+        FindAll(trackChanges)
+            .OrderBy(c => c.Name)
+            .ToList();
+
+    public IEnumerable<Compani> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
+        FindByConditoin(x => ids.Contains(x.Id), trackChanges).ToList();
+
+    public Compani? GetCompany(Guid companyId, bool trackChanges) => FindByConditoin(c => c.Id.Equals(companyId), trackChanges)
+        .SingleOrDefault();
 }
