@@ -18,8 +18,8 @@ public class CompanyRepository : RepositoryBase<Compani>, ICompanyRepository
             .ToList();
 
     public IEnumerable<Compani> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
-        FindByConditoin(x => ids.Contains(x.Id), trackChanges).ToList();
+        FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
 
-    public Compani? GetCompany(Guid companyId, bool trackChanges) => FindByConditoin(c => c.Id.Equals(companyId), trackChanges)
+    public Compani? GetCompany(Guid companyId, bool trackChanges) => FindByCondition(c => c.Id.Equals(companyId), trackChanges)
         .SingleOrDefault();
 }

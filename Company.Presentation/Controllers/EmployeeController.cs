@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -32,8 +33,15 @@ public class EmployeeController : ControllerBase
         if (employee is null)
             return BadRequest("Объект EmployeeForCreationDto равен null");
 
-        var employeeToReturn = _serviceManager.EmployeeService.CreateEmployeeForCompany(companyId, employee, trackChanges:false);
+        var employeeToReturn = _serviceManager.EmployeeService.CreateEmployeeForCompany(companyId, employee, trackChanges: false);
 
         return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employeeToReturn.Id }, employeeToReturn);
+    }
+
+    [HttpDelete("{id:guid}")]
+    public IActionResult DeleteEmployeeForCompany(Guid companyId, Guid id)
+    {
+        _serviceManager.EmployeeService.DeleteEmployeeForCompany(companyId, id, trackChanges: false);
+        return NoContent();
     }
 }
