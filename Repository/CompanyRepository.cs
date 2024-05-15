@@ -22,4 +22,6 @@ public class CompanyRepository : RepositoryBase<Compani>, ICompanyRepository
 
     public Compani? GetCompany(Guid companyId, bool trackChanges) => FindByCondition(c => c.Id.Equals(companyId), trackChanges)
         .SingleOrDefault();
+
+    public void DeleteCompany(Compani company) => Delete(company);
 }

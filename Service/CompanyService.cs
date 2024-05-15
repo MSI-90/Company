@@ -80,4 +80,14 @@ internal sealed class CompanyService : ICompanyService
 
         return (companies: companyCollectionToReturn, ids: ids);
     }
+
+    public void DeleteCompany(Guid companyId, bool trackChanges)
+    {
+        var company = _repositoryManager.Company.GetCompany(companyId, trackChanges);
+        if (company is null)
+            throw new CompanyNotFoundException(companyId);
+
+        _repositoryManager.Company.DeleteCompany(company);
+        _repositoryManager.Save();
+    }
 }
