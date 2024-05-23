@@ -12,7 +12,7 @@ public record EmployeeForCreationDto
     [Range(18, int.MaxValue, ErrorMessage = "Возраст обязателен и он не может быть меньше 18.")]
     public int Age { get; init; }
 
-    [Required(ErrorMessage = "позиция - обязательное поле.")]
+    [Required(ErrorMessage = "Позиция - обязательное поле.")]
     [MaxLength(20, ErrorMessage = "Максимальная длина поля Позиция - 20 символов")]
     public string? Position {  get; init; } 
 }

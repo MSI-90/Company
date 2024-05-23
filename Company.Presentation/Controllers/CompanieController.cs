@@ -40,6 +40,9 @@ public class CompaniesController : ControllerBase
         if (company == null)
             return BadRequest("Объект CompanyForCreationDto равен null");
 
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+
         var createdCompany = _serviceManager.CompanyService.CreateCompany(company);
 
         return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
