@@ -8,7 +8,7 @@ public abstract record ComapnyForManipulationDto
     [MaxLength(60, ErrorMessage = "Поле Название может содержать не более 60 символов")]
     public string? Name { get; init; }
 
-    [Required(ErrorMessage = "Адресс компании является обязателньым полем")]
+    [Required(ErrorMessage = "Адресс компании является обязательным полем")]
     [MaxLength(60, ErrorMessage = "Поле Адресс может содержать не более 60 символов")]
     public string? Address { get; init; }
 
