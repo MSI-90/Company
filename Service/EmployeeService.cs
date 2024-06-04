@@ -45,14 +45,14 @@ namespace Service
             return employee;
         }
 
-        public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync(Guid companyId, EmployeeParameters employeesParameters, bool trackChanges)
+        public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync(Guid companyId, EmployeeParameters employeesParameters, bool trackChanges)
         {
             await CheckIfCompanyExists(companyId, trackChanges);
 
-            var employeesFromDb = await _repositoryManager.Employee.GetEmployeesAsync(companyId, employeesParameters, trackChanges);
-            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesFromDb);
+            var employeesWithMetaData = await _repositoryManager.Employee.GetEmployeesAsync(companyId, employeesParameters, trackChanges);
+            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetaData);
 
-            return employeesDto;
+            return (employees: employeesDto, metaData: employeesWithMetaData.MetaData);
         }
 
         public async Task DeleteEmployeeForCompanyAsync(Guid companyId, Guid id, bool trackChanges)

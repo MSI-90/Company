@@ -13,7 +13,8 @@ namespace Company.Extensions.ServiceExtensons
         {
             options.AddPolicy("CorsPoslicy", builder => builder.AllowAnyOrigin()
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            .WithExposedHeaders("X-Pagination"));
         });
 
         public static void ConfigureIISIntegration(this IServiceCollection services) => services.Configure<IISOptions>(options =>
