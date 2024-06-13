@@ -32,5 +32,8 @@ namespace Company.Extensions.ServiceExtensons
 
         public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>
             builder.AddMvcOptions(config => config.OutputFormatters.Add(new CsvOutputFormatter()));
+
+        //public static void ConfigureResponseCaching(this IServiceCollection services) => services.AddResponseCaching();
+        public static void ConfigureOutputCaching(this IServiceCollection services) => services.AddOutputCache(opt => opt.AddPolicy("120secondsDuration", p => p.Expire(TimeSpan.FromSeconds(120))));
     }
 }

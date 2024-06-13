@@ -16,6 +16,7 @@ public class EmployeeController : ControllerBase
     public EmployeeController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
     [HttpGet]
+    [HttpHead]
     public async Task<IActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
     {
         var pagedResult = await _serviceManager.EmployeeService.GetEmployeesAsync(companyId, employeeParameters, trackChanges: false);

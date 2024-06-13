@@ -1,6 +1,7 @@
 ﻿using Company.Presentation.ActionFilters;
 using Company.Presentation.ModelBinders;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -8,6 +9,8 @@ namespace Company.Presentation.Controllers;
 
 [Route("api/companies")]
 [ApiController]
+//[ResponseCache(CacheProfileName = "120secondsDuration")]
+[OutputCache(PolicyName = "120secondsDuration")]
 public class CompaniesController : ControllerBase
 {
     private readonly IServiceManager _serviceManager;
@@ -21,9 +24,15 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpGet("{id:guid}", Name = "CompanyById")]
+    [OutputCache(Duration = 60)]
+    //[ResponseCache(Duration = 60)]
     public async Task<IActionResult> GetCompany(Guid id)
     {
         var company = await _serviceManager.CompanyService.GetCompanyAsync(id, trackChanges: false);
+
+        var etag = $"\"{Guid.NewGuid():n}\"";
+        HttpContext.Response.Headers.ETag = etag ;
+
         return Ok(company);
     }
 
