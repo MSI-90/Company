@@ -2,10 +2,10 @@
 using Contracts;
 using Entities.Exceptions;
 using Entities.Models;
-using Microsoft.VisualBasic;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
+using System.Dynamic;
 
 namespace Service
 {
@@ -14,11 +14,13 @@ namespace Service
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _loggerManager;
         private readonly IMapper _mapper;
-        public EmployeeService(IRepositoryManager repositoryManager, ILoggerManager loggerManager, IMapper mapper)
+        private readonly IDataShaper<EmployeeDto> _dataShaper;
+        public EmployeeService(IRepositoryManager repositoryManager, ILoggerManager loggerManager, IMapper mapper, IDataShaper<EmployeeDto> dataShaper)
         {
             _repositoryManager = repositoryManager;
             _loggerManager = loggerManager;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
 
         public async Task<EmployeeDto> CreateEmployeeForCompanyAsync(Guid comppanyId, EmployeeForCreationDto employeeForCreation, bool trackChanges)
@@ -45,7 +47,7 @@ namespace Service
             return employee;
         }
 
-        public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync(Guid companyId, EmployeeParameters employeesParameters, bool trackChanges)
+        public async Task<(IEnumerable<ExpandoObject> employees, MetaData metaData)> GetEmployeesAsync(Guid companyId, EmployeeParameters employeesParameters, bool trackChanges)
         {
             if (!employeesParameters.ValidAgeRange)
                 throw new MaxAgeRangeBadRequestException();
@@ -54,8 +56,9 @@ namespace Service
 
             var employeesWithMetaData = await _repositoryManager.Employee.GetEmployeesAsync(companyId, employeesParameters, trackChanges);
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetaData);
+            var shapedData = _dataShaper.ShapeData(employeesDto, employeesParameters.Fields);
 
-            return (employees: employeesDto, metaData: employeesWithMetaData.MetaData);
+            return (employees: shapedData, metaData: employeesWithMetaData.MetaData);
         }
 
         public async Task DeleteEmployeeForCompanyAsync(Guid companyId, Guid id, bool trackChanges)
