@@ -33,7 +33,6 @@ builder.Services.AddControllers(config =>
     config.RespectBrowserAcceptHeader = true;
     config.ReturnHttpNotAcceptable = true;
     config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
-    //config.CacheProfiles.Add("120secondsDuration", new CacheProfile { Duration = 120 });
 })
     .AddXmlDataContractSerializerFormatters()
     .AddCustomCSVFormatter()
@@ -48,7 +47,7 @@ NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddExceptionHandler<GlobalExtensionHandler>();
 builder.Services.ConfigureOutputCaching();
-//builder.Services.ConfigureResponseCaching();
+builder.Services.ConfigureRateLimitingOptions();
 
 builder.Services.AddSwaggerGen();
 
@@ -68,9 +67,9 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.All
 });
 
+app.UseRateLimiter();
 app.UseCors("CorsPolicy");
 app.UseOutputCache();
-//app.UseResponseCaching();
 
 app.UseAuthorization();
 
