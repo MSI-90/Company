@@ -2,7 +2,9 @@ using Company;
 using Company.Extensions.ServiceExtensons;
 using Company.Presentation.ActionFilters;
 using Contracts;
+using Entities.Models;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Options;
@@ -48,6 +50,10 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddExceptionHandler<GlobalExtensionHandler>();
 builder.Services.ConfigureOutputCaching();
 builder.Services.ConfigureRateLimitingOptions();
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
+builder.Services.AddJwtConfiguration(builder.Configuration);
 
 builder.Services.AddSwaggerGen();
 
@@ -71,6 +77,7 @@ app.UseRateLimiter();
 app.UseCors("CorsPolicy");
 app.UseOutputCache();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

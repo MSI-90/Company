@@ -1,11 +1,13 @@
 ﻿using Company.Presentation.ActionFilters;
 using Company.Presentation.ModelBinders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
 namespace Company.Presentation.Controllers;
+
 
 [Route("api/companies")]
 [ApiController]
@@ -16,7 +18,8 @@ public class CompaniesController : ControllerBase
     private readonly IServiceManager _serviceManager;
     public CompaniesController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
-    [HttpGet]
+    [HttpGet(Name = "GetCompanies")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> GetCompanies()
     {
         var companies = await _serviceManager.CompanyService.GetAllCompaniesAsync(trackChanges: false);

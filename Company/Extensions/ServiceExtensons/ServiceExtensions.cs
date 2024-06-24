@@ -5,7 +5,12 @@ using Service.Contracts;
 using Service;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
-using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
+using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Entities.ConfigurationModels;
 
 namespace Company.Extensions.ServiceExtensons
 {
@@ -44,7 +49,7 @@ namespace Company.Extensions.ServiceExtensons
                 RateLimitPartition.GetFixedWindowLimiter("GlobalLimiter", partition => new FixedWindowRateLimiterOptions
                 {
                     AutoReplenishment = true,
-                    PermitLimit = 5,
+                    PermitLimit = 30,
                     QueueLimit = 2,
                     Window = TimeSpan.FromMinutes(1)
                 }));
@@ -57,6 +62,48 @@ namespace Company.Extensions.ServiceExtensons
                         .WriteAsync($"Слишком много запросов. Пожалуйста попробуйте отправить запрос через {retryAfter.TotalSeconds} секунд.", token);
                     else
                         await context.HttpContext.Response.WriteAsync("Слишком много запросов. Пожалуйста повторите попытку позже", token);
+                };
+            });
+        }
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            var builder = services.AddIdentity<User, IdentityRole>(o =>
+            {
+                o.Password.RequireDigit = true;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 10;
+                o.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<RepositoryContext>()
+            .AddDefaultTokenProviders();
+        }
+        public static void AddJwtConfiguration(this IServiceCollection services, IConfiguration configuration) => services.Configure<JwtConfiguration>(configuration.GetSection("JwtSettings"));
+        public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration) 
+        {
+            var jwtConfiguration = new JwtConfiguration();
+            configuration.Bind(jwtConfiguration.Section, jwtConfiguration);
+            
+            var secretKey = Environment.GetEnvironmentVariable("SECRET");
+
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtConfiguration.ValidIssuer,
+                    ValidAudience = jwtConfiguration.ValidAudience,
+                    ClockSkew = TimeSpan.Zero,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
             });
         }
