@@ -13,6 +13,7 @@ namespace Company.Presentation.Controllers;
 [ApiController]
 //[ResponseCache(CacheProfileName = "120secondsDuration")]
 [OutputCache(PolicyName = "120secondsDuration")]
+[ApiExplorerSettings(GroupName = "v1")]
 public class CompaniesController : ControllerBase
 {
     private readonly IServiceManager _serviceManager;

@@ -54,6 +54,7 @@ builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.AddJwtConfiguration(builder.Configuration);
+builder.Services.ConfigureSwagger();
 
 builder.Services.AddSwaggerGen();
 
@@ -61,6 +62,8 @@ var app = builder.Build();
 
 //var logger = app.Services.GetRequiredService<ILoggerManager>();
 //app.ConfigureExceptionHandler(logger);
+app.UseSwagger();
+app.UseSwaggerUI(s => s.SwaggerEndpoint("/swagger/v1/swagger.json", "MSI API v1"));
 app.UseExceptionHandler(opt => { });
 
 if (app.Environment.IsProduction())
