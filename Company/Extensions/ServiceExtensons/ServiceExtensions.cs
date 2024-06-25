@@ -112,7 +112,24 @@ namespace Company.Extensions.ServiceExtensons
         {
             services.AddSwaggerGen(s =>
             {
-                s.SwaggerDoc("v1", new OpenApiInfo { Title = "MSI API", Version = "v1" });
+                s.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "MSI API",
+                    Version = "v1",
+                    Description = "CompanyEmployees API by MSI",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Sergey Miller",
+                        Email = "s.miller@list.ru",
+                        Url = new Uri(@"https://barnaul.hh.ru/applicant/resumes?hhtmFrom=main&hhtmFromLabel=header")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "CompanyEmployees API LICX",
+                        Url = new Uri("https://example.com/license")
+                    }
+                });
                 s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -136,6 +153,10 @@ namespace Company.Extensions.ServiceExtensons
                         new List<string>()
                     }
                 });
+
+                var xmlFile = $"{typeof(Presentation.AssemblyReference).Assembly.GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                s.IncludeXmlComments(xmlPath);
             });
         }
     }

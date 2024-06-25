@@ -6,7 +6,7 @@ using Shared.DataTransferObjects;
 
 namespace Company.Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/authentication")]
 [ApiController]
 public class AuthenticationController : ControllerBase
 {

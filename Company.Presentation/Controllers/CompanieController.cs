@@ -19,6 +19,10 @@ public class CompaniesController : ControllerBase
     private readonly IServiceManager _serviceManager;
     public CompaniesController(IServiceManager serviceManager) => _serviceManager = serviceManager;
 
+    /// <summary>
+    /// Получает список всех компаний
+    /// </summary>
+    /// <returns>Список компаний</returns>
     [HttpGet(Name = "GetCompanies")]
     [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> GetCompanies()
@@ -47,7 +51,18 @@ public class CompaniesController : ControllerBase
         return Ok(companies);
     }
 
-    [HttpPost]
+    /// <summary>
+    /// Создаёт новую компанию
+    /// </summary>
+    /// <param name="company"></param>
+    /// <returns>Вновь созданная компания</returns>
+    /// <response code="201">Возвращает только что созданный элемент</response>
+    /// <response code="400">Если объект равен NULL</response>
+    /// <response code="422">Если модель недействительна</response>
+    [HttpPost(Name = "CreateCompany")]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(422)]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
     {

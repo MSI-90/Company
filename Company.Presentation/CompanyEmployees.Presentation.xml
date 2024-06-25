@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Company.Presentation</name>
+    </assembly>
+    <members>
+        <member name="M:Company.Presentation.Controllers.CompaniesController.GetCompanies">
+            <summary>
+            Получает список всех компаний
+            </summary>
+            <returns>Список компаний</returns>
+        </member>
+    </members>
+</doc>

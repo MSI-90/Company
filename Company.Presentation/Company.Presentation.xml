@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Company.Presentation</name>
+    </assembly>
+    <members>
+        <member name="M:Company.Presentation.Controllers.CompaniesController.GetCompanies">
+            <summary>
+            Получает список всех компаний
+            </summary>
+            <returns>Список компаний</returns>
+        </member>
+        <member name="M:Company.Presentation.Controllers.CompaniesController.CreateCompany(Shared.DataTransferObjects.CompanyForCreationDto)">
+            <summary>
+            Создаёт новую компанию
+            </summary>
+            <param name="company"></param>
+            <returns>Вновь созданная компания</returns>
+            <response code="201">Возвращает только что созданный элемент</response>
+            <response code="400">Если объект равен NULL</response>
+            <response code="422">Если модель недействительна</response>
+        </member>
+    </members>
+</doc>
